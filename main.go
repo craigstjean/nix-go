@@ -103,27 +103,27 @@ func main() {
 					},
 				},
 				Action: func(cCtx *cli.Context) error {
-					var pkg string
-
 					id := cCtx.Uint("id")
+					pkgIndex := 0
 					if id == 0 {
 						name := cCtx.Args().First()
 						var project nixgo.Project
 						db.Where(&nixgo.Project{Name: name}).Find(&project)
 						id = project.ID
-						pkg = cCtx.Args().Get(1)
-					} else {
-						pkg = cCtx.Args().First()
+						pkgIndex = 1
 					}
 
-					projectPackage := nixgo.ProjectPackage{ProjectID: id, Name: pkg}
+					for i := pkgIndex; i < cCtx.Args().Len(); i++ {
+						pkg := cCtx.Args().Get(i)
+						projectPackage := nixgo.ProjectPackage{ProjectID: id, Name: pkg}
 
-					result := db.Create(&projectPackage)
-					if result.Error != nil {
-						log.Fatalln(result.Error)
+						result := db.Create(&projectPackage)
+						if result.Error != nil {
+							log.Fatalln(result.Error)
+						}
+
+						fmt.Printf("Added %v to %v\n", pkg, id)
 					}
-
-					fmt.Printf("Added to %v\n", id)
 
 					return nil
 				},
@@ -138,26 +138,22 @@ func main() {
 					},
 				},
 				Action: func(cCtx *cli.Context) error {
-					var pkg string
-
 					id := cCtx.Uint("id")
+					pkgIndex := 0
 					if id == 0 {
 						name := cCtx.Args().First()
 						var project nixgo.Project
 						db.Where(&nixgo.Project{Name: name}).Find(&project)
 						id = project.ID
-						pkg = cCtx.Args().Get(1)
-					} else {
-						pkg = cCtx.Args().First()
+						pkgIndex = 1
 					}
 
-					if pkg == "" {
-						fmt.Println("Package name required")
-					} else {
+					for i := pkgIndex; i < cCtx.Args().Len(); i++ {
+						pkg := cCtx.Args().Get(i)
 						var projectPackage nixgo.ProjectPackage
 						db.Where(&nixgo.ProjectPackage{ProjectID: id, Name: pkg}).First(&projectPackage)
 						db.Delete(&projectPackage)
-						fmt.Printf("Deleted from %v\n", id)
+						fmt.Printf("Removed %v from %v\n", pkg, id)
 					}
 
 					return nil
