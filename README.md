@@ -80,7 +80,7 @@ nix-go shell ruby
 ### Example - `nix-go` dev 
 ```zsh
 nix-go new --path ~/Projects/nix-go nix-go
-nix-go ap git gcc go_1_18
+nix-go ap nix-go git gcc go_1_18
 nix-go shell nix-go
 ```
 
