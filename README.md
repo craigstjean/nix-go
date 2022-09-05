@@ -8,7 +8,7 @@
 
 ## Why does `nix-go` exist?
 
-To be honest, <span style="color:red">you probably shouldn't use this</span>. This is the start of my journy into [NixOS](https://nixos.org/), which can be used to keep your dev environments pure and your builds reproducible.
+To be honest, *you probably shouldn't use this*. This is the start of my journy into [NixOS](https://nixos.org/), which can be used to keep your dev environments pure and your builds reproducible.
 
 To best use Nix, you need to learn the Nix language (e.g. from [nix.dev](https://nix.dev/tutorials/declarative-and-reproducible-developer-environments). There are also tools out there like:
 
@@ -35,31 +35,42 @@ COMMANDS:
    help, h                  Shows a list of commands or help for one command
 ```
 
+### Example - C++
 ```zsh C++
 nix-go new cpp
 nix-go ap cpp clang_14 clang-tools_14 clang-analyzer ninja autogen autoconf automake
 nix-go shell cpp
 ```
+
+### Example - D
 ```zsh D
 nix-go new dlang
 nix-go ap dlang dmd ldc dub
 nix-go shell dlang
 ```
+
+### Example - .NET
 ```zsh .NET
 nix-go new dotnet
 nix-go ap dotnet dotnet-sdk
 nix-go shell dotnet
 ```
+
+### Example - Elixir
 ```zsh Elixir
 nix-go new elixir
 nix-go ap elixir erlang elixir inotify-tools
 nix-go shell elixir
 ```
+
+### Example - LISP
 ```zsh LISP
 nix-go new lisp
 nix-go ap lisp sbcl lispPackages.quicklisp
 nix-go shell lisp
 ```
+
+### Example - Ruby
 ```zsh Ruby
 nix-go new ruby
 nix-go ap ruby ruby_3_1
