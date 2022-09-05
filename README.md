@@ -77,6 +77,13 @@ nix-go ap ruby ruby_3_1
 nix-go shell ruby
 ```
 
+### Example - `nix-go` dev 
+```zsh
+nix-go new --path ~/Projects/nix-go nix-go
+nix-go ap git gcc go_1_18
+nix-go shell nix-go
+```
+
 ### `NIX_ENV`
 
 `nix-go` starts the Nix shell with an environment variable `NIX_ENV` set, to allow echoing the current shell name in bash/zsh/etc.
