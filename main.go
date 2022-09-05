@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"strconv"
 	"strings"
 
 	"craigstjean.com/nix-go/nixgo"
@@ -25,7 +24,7 @@ func main() {
 				Usage:   "list existing projects/environments",
 				Action: func(cCtx *cli.Context) error {
 					var projects []nixgo.Project
-					err := db.Model(&nixgo.Project{}).Find(&projects).Error
+					err := db.Model(&nixgo.Project{}).Order("name").Find(&projects).Error
 					if err == nil {
 						for _, p := range projects {
 							if p.Path != "" {
@@ -58,7 +57,7 @@ func main() {
 
 					result := db.Create(&project)
 					if result.Error != nil {
-						log.Fatal(result.Error)
+						log.Fatalln(result.Error)
 					}
 
 					fmt.Printf("Created %v\n", project.ID)
@@ -72,13 +71,19 @@ func main() {
 				Usage:   "list package in project/environment",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
-						Name:     "id",
-						Required: true,
+						Name: "id",
 					},
 				},
 				Action: func(cCtx *cli.Context) error {
-					id := cCtx.Uint("id")
 					var packages []nixgo.ProjectPackage
+
+					id := cCtx.Uint("id")
+					if id == 0 {
+						name := cCtx.Args().First()
+						var project nixgo.Project
+						db.Where(&nixgo.Project{Name: name}).Find(&project)
+						id = project.ID
+					}
 					db.Where(&nixgo.ProjectPackage{ProjectID: id}).Find(&packages)
 
 					for _, pp := range packages {
@@ -94,18 +99,28 @@ func main() {
 				Usage:   "add package to project/environment",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
-						Name:     "id",
-						Required: true,
+						Name: "id",
 					},
 				},
 				Action: func(cCtx *cli.Context) error {
-					id := cCtx.Uint64("id")
-					pkg := cCtx.Args().First()
-					projectPackage := nixgo.ProjectPackage{ProjectID: uint(id), Name: pkg}
+					var pkg string
+
+					id := cCtx.Uint("id")
+					if id == 0 {
+						name := cCtx.Args().First()
+						var project nixgo.Project
+						db.Where(&nixgo.Project{Name: name}).Find(&project)
+						id = project.ID
+						pkg = cCtx.Args().Get(1)
+					} else {
+						pkg = cCtx.Args().First()
+					}
+
+					projectPackage := nixgo.ProjectPackage{ProjectID: id, Name: pkg}
 
 					result := db.Create(&projectPackage)
 					if result.Error != nil {
-						log.Fatal(result.Error)
+						log.Fatalln(result.Error)
 					}
 
 					fmt.Printf("Added to %v\n", id)
@@ -119,13 +134,22 @@ func main() {
 				Usage:   "removes package from project/environment",
 				Flags: []cli.Flag{
 					&cli.StringFlag{
-						Name:     "id",
-						Required: true,
+						Name: "id",
 					},
 				},
 				Action: func(cCtx *cli.Context) error {
+					var pkg string
+
 					id := cCtx.Uint("id")
-					pkg := cCtx.Args().First()
+					if id == 0 {
+						name := cCtx.Args().First()
+						var project nixgo.Project
+						db.Where(&nixgo.Project{Name: name}).Find(&project)
+						id = project.ID
+						pkg = cCtx.Args().Get(1)
+					} else {
+						pkg = cCtx.Args().First()
+					}
 
 					if pkg == "" {
 						fmt.Println("Package name required")
@@ -143,10 +167,24 @@ func main() {
 				Name:    "delete",
 				Aliases: []string{"del", "remove", "rm"},
 				Usage:   "delete project/environment",
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name: "id",
+					},
+				},
 				Action: func(cCtx *cli.Context) error {
-					id, err := strconv.Atoi(cCtx.Args().First())
-					if err != nil {
-						log.Fatalf("%v not a number", id)
+					var name string
+
+					id := cCtx.Uint("id")
+					if id == 0 {
+						name = cCtx.Args().First()
+						var project nixgo.Project
+						db.Where(&nixgo.Project{Name: name}).Find(&project)
+						id = project.ID
+					}
+
+					if id == 0 {
+						log.Fatalln("Project not found")
 					} else {
 						db.Delete(&nixgo.Project{}, id)
 						fmt.Printf("Deleted %v\n", id)
@@ -165,7 +203,7 @@ func main() {
 					var project nixgo.Project
 					err := db.Where(&nixgo.Project{Name: name}).Preload("Packages").First(&project).Error
 					if err != nil {
-						log.Fatalf("Cannot find project: %v", name)
+						log.Fatalf("Cannot find project: %v\n", name)
 					} else {
 						var sb strings.Builder
 						sb.WriteString("-p ")
@@ -186,6 +224,11 @@ func main() {
 						cmd.Stdin = os.Stdin
 						cmd.Stdout = os.Stdout
 						cmd.Stderr = os.Stderr
+
+						if project.Path != "" {
+							cmd.Dir = project.Path
+						}
+
 						cmd.Run()
 						cmd.Wait()
 					}
@@ -197,6 +240,6 @@ func main() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
 }
