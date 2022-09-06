@@ -102,7 +102,7 @@ fi
 ## Building `nix-go`
 
 ```
-nix-shell -p git gcc
+nix-shell --pure -p git gcc go_1_18
 git clone https://github.com/craigstjean/nix-go.git
 cd nix-go
 go build
