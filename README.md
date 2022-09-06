@@ -4,13 +4,13 @@
 
 ## What is `nix-go`?
 
-`nix-go` is a shell manager for setting up recreatable shell environments using [Nix](https://nix.dev/tutorials/install-nix))
+`nix-go` is a shell manager for setting up recreatable shell environments using [Nix](https://nix.dev/tutorials/install-nix)
 
 ## Why does `nix-go` exist?
 
 To be honest, ***you probably shouldn't use this***. This is the start of my journy into [NixOS](https://nixos.org/), which can be used to keep your dev environments pure and your builds reproducible.
 
-To best use Nix, you need to learn the Nix language (e.g. from [nix.dev](https://nix.dev/tutorials/declarative-and-reproducible-developer-environments). There are also tools out there like:
+To best use Nix, you need to learn the Nix language (e.g. from [nix.dev](https://nix.dev/tutorials/declarative-and-reproducible-developer-environments)). There are also tools out there like:
 
 - [home-manager](https://github.com/nix-community/home-manager)
 - [lorri](https://github.com/nix-community/lorri/)
