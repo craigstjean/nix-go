@@ -8,7 +8,7 @@
 
 ## Why does `nix-go` exist?
 
-To be honest, *you probably shouldn't use this*. This is the start of my journy into [NixOS](https://nixos.org/), which can be used to keep your dev environments pure and your builds reproducible.
+To be honest, ***you probably shouldn't use this***. This is the start of my journy into [NixOS](https://nixos.org/), which can be used to keep your dev environments pure and your builds reproducible.
 
 To best use Nix, you need to learn the Nix language (e.g. from [nix.dev](https://nix.dev/tutorials/declarative-and-reproducible-developer-environments). There are also tools out there like:
 
@@ -17,6 +17,8 @@ To best use Nix, you need to learn the Nix language (e.g. from [nix.dev](https:/
 - probably [plenty of others](https://nix-community.github.io/awesome-nix/)
 
 This project is essentially a stop-gap until I can consume more documentation and further myself into Nix.
+
+Also note that this solution is more complex and probably less in the spirit of Nix than the [script here](https://github.com/craigstjean/dotfiles/blob/master/bin/nix-go) and nixpkgs [config here](https://github.com/craigstjean/dotfiles/blob/master/.config/nixpkgs/config.nix)
 
 ## Using `nix-go`
 
