@@ -4,7 +4,7 @@
 
 ## What is `nix-go`?
 
-`nix-go` is a shell manager for setting up recreatable shell environments using [Nix](https://nix.dev/tutorials/install-nix)
+`nix-go` is a shell manager for setting up recreatable shell environments using [Nix](https://nix.dev/tutorials/install-nix))
 
 ## Why does `nix-go` exist?
 
